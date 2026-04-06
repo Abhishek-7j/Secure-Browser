@@ -1,0 +1,16 @@
+# Browser Icon Placeholder
+# This is a placeholder for the browser icon file
+# You should replace this with an actual PNG icon file (256x256 pixels)
+# The icon should represent security and browsing
+# Recommended colors: Blue (#2563eb), Dark (#0f172a), White (#ffffff)
+# Design suggestions: Shield with browser window, lock icon, or security symbol
+
+# To create your icon:
+# 1. Use a design tool like Canva, Figma, or Photoshop
+# 2. Create a 256x256 PNG image
+# 3. Use security-themed colors and symbols
+# 4. Save as browser-icon.png in this directory
+# 5. The icon will be used for the browser window and taskbar
+
+# Temporary: You can use any PNG file as placeholder
+# The browser will still work without the icon

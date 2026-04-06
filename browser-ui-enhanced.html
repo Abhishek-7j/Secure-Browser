@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faprot Secure Browser - Professional Security Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --darker-bg: #020617;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Toolbar */
+        .toolbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary-color);
+            margin-right: 20px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--darker-bg);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* URL Bar */
+        .url-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--darker-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .url-bar:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: var(--glow);
+        }
+
+        .url-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+
+        .url-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .security-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 12px;
+            background: var(--success-color);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .security-indicator.warning {
+            background: var(--warning-color);
+        }
+
+        .security-indicator.danger {
+            background: var(--danger-color);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--darker-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-item:hover {
+            background: var(--darker-bg);
+            transform: translateX(4px);
+        }
+
+        .sidebar-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .sidebar-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .sidebar-badge {
+            background: var(--danger-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Browser View */
+        .browser-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--darker-bg);
+        }
+
+        .browser-header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-url {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'Inter', monospace;
+        }
+
+        .browser-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .browser-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--darker-bg);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .browser-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .webview-container {
+            flex: 1;
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            margin: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .webview {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Security Panel */
+        .security-panel {
+            position: absolute;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .security-panel.open {
+            right: 0;
+        }
+
+        .security-panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .security-panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .security-stat {
+            background: var(--darker-bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .security-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .security-stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .security-list {
+            list-style: none;
+        }
+
+        .security-list-item {
+            background: var(--darker-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .security-list-item-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+        }
+
+        .security-list-item-icon.danger {
+            background: var(--danger-color);
+        }
+
+        .security-list-item-icon.warning {
+            background: var(--warning-color);
+        }
+
+        .security-list-item-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .security-list-item-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            min-width: 300px;
+            box-shadow: var(--shadow);
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 999;
+            }
+
+            .security-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .toolbar {
+                padding: 8px 12px;
+            }
+
+            .action-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span>Faprot Browser</span>
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" id="backBtn" title="Back">←</button>
+            <button class="nav-btn" id="forwardBtn" title="Forward">→</button>
+            <button class="nav-btn" id="reloadBtn" title="Reload">↻</button>
+            <button class="nav-btn" id="stopBtn" title="Stop">✕</button>
+        </div>
+
+        <div class="url-bar">
+            <input type="text" class="url-input" id="urlInput" placeholder="Enter URL or search terms...">
+            <div class="security-indicator" id="securityIndicator"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn btn-primary" id="goBtn">
+                <span>🚀</span>
+                <span>Go</span>
+            </button>
+            <button class="action-btn btn-secondary" id="securityBtn">
+                <span>🔒</span>
+                <span>Security</span>
+            </button>
+            <button class="action-btn btn-secondary" id="settingsBtn">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Navigation</div>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Security</div>
+                    <div class="sidebar-item active" data-section="dashboard">
+                        <div class="sidebar-icon">📊</div>
+                        <div class="sidebar-text">Security Dashboard</div>
+                    </div>
+                    <div class="sidebar-item" data-section="blocked">
+                        <div class="sidebar-icon">🚫</div>
+                        <div class="sidebar-text">Blocked Sites</div>
+                        <div class="sidebar-badge" id="blockedCount">0</div>
+                    </div>
+                    <div class="sidebar-item" data-section="whitelist">
+                        <div class="sidebar-icon">✅</div>
+                        <div class="sidebar-text">Whitelisted Sites</div>
+                    </div>
+                    <div class="sidebar-item" data-section="logs">
+                        <div class="sidebar-icon">📝</div>
+                        <div class="sidebar-text">Security Logs</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Browsing</div>
+                    <div class="sidebar-item" data-section="history">
+                        <div class="sidebar-icon">🕐</div>
+                        <div class="sidebar-text">History</div>
+                    </div>
+                    <div class="sidebar-item" data-section="bookmarks">
+                        <div class="sidebar-icon">📚</div>
+                        <div class="sidebar-text">Bookmarks</div>
+                    </div>
+                    <div class="sidebar-item" data-section="downloads">
+                        <div class="sidebar-icon">⬇️</div>
+                        <div class="sidebar-text">Downloads</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Tools</div>
+                    <div class="sidebar-item" data-section="report">
+                        <div class="sidebar-icon">📈</div>
+                        <div class="sidebar-text">Security Report</div>
+                    </div>
+                    <div class="sidebar-item" data-section="settings">
+                        <div class="sidebar-icon">⚙️</div>
+                        <div class="sidebar-text">Settings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browser View -->
+        <div class="browser-view">
+            <div class="browser-header">
+                <div class="page-info">
+                    <div class="page-title" id="pageTitle">
+                        <span id="pageTitleIcon">🏠</span>
+                        <span id="pageTitleText">New Tab</span>
+                    </div>
+                    <div class="page-url" id="pageUrl">about:blank</div>
+                </div>
+                <div class="browser-actions">
+                    <button class="browser-action-btn" id="homeBtn" title="Home">🏠</button>
+                    <button class="browser-action-btn" id="bookmarkBtn" title="Bookmark">📚</button>
+                    <button class="browser-action-btn" id="downloadBtn" title="Downloads">⬇️</button>
+                    <button class="browser-action-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+                </div>
+            </div>
+
+            <div class="webview-container">
+                <webview class="webview" id="webview" src="about:blank"></webview>
+            </div>
+        </div>
+
+        <!-- Security Panel -->
+        <div class="security-panel" id="securityPanel">
+            <div class="security-panel-header">
+                <div class="security-panel-title">
+                    <span>🔒</span>
+                    <span>Security Panel</span>
+                </div>
+                <button class="browser-action-btn" id="closeSecurityPanel">✕</button>
+            </div>
+            <div class="security-panel-content">
+                <div class="security-stat">
+                    <div class="security-stat-label">Threats Blocked</div>
+                    <div class="security-stat-value" id="threatsBlocked">0</div>
+                </div>
+                <div class="security-stat">
+                    <div class="security-stat-label">Sites Visited</div>
+                    <div class="security-stat-value" id="sitesVisited">0</div>
+                </div>
+                <div class="security-stat">
+                    <div class="security-stat-label">Security Score</div>
+                    <div class="security-stat-value" id="securityScore">100%</div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <div class="sidebar-section-title">Recent Security Events</div>
+                    <ul class="security-list" id="securityEvents">
+                        <!-- Security events will be populated here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <div class="status-item">
+                <span>🔒</span>
+                <span id="connectionStatus">Secure Connection</span>
+            </div>
+            <div class="status-item">
+                <span>🌐</span>
+                <span id="loadStatus">Ready</span>
+            </div>
+        </div>
+        <div class="status-right">
+            <div class="status-item">
+                <span>📊</span>
+                <span id="securityStatus">Protected</span>
+            </div>
+            <div class="status-item">
+                <span>⏱️</span>
+                <span id="timestamp">00:00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        class BrowserUI {
+            constructor() {
+                this.webview = document.getElementById('webview');
+                this.urlInput = document.getElementById('urlInput');
+                this.securityIndicator = document.getElementById('securityIndicator');
+                this.securityPanel = document.getElementById('securityPanel');
+                this.sidebar = document.getElementById('sidebar');
+                this.currentURL = 'about:blank';
+                this.isLoading = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupWebviewListeners();
+                this.loadInitialData();
+                this.startClock();
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.getElementById('goBtn').addEventListener('click', () => this.navigate());
+                document.getElementById('urlInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.navigate();
+                });
+
+                // Navigation controls
+                document.getElementById('backBtn').addEventListener('click', () => this.goBack());
+                document.getElementById('forwardBtn').addEventListener('click', () => this.goForward());
+                document.getElementById('reloadBtn').addEventListener('click', () => this.reload());
+                document.getElementById('stopBtn').addEventListener('click', () => this.stop());
+
+                // Browser actions
+                document.getElementById('homeBtn').addEventListener('click', () => this.goHome());
+                document.getElementById('securityBtn').addEventListener('click', () => this.toggleSecurityPanel());
+                document.getElementById('closeSecurityPanel').addEventListener('click', () => this.closeSecurityPanel());
+                document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
+
+                // Sidebar navigation
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.addEventListener('click', () => this.handleSidebarNavigation(item));
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
+            }
+
+            setupWebviewListeners() {
+                this.webview.addEventListener('did-start-loading', () => this.onLoadingStart());
+                this.webview.addEventListener('did-stop-loading', () => this.onLoadingStop());
+                this.webview.addEventListener('did-fail-load', (e) => this.onLoadError(e));
+                this.webview.addEventListener('page-title-updated', (e) => this.onTitleUpdate(e.title));
+                this.webview.addEventListener('did-navigate', (e) => this.onNavigate(e.url));
+                this.webview.addEventListener('did-navigate-in-page', (e) => this.onNavigate(e.url));
+                this.webview.addEventListener('console-message', (e) => this.onConsoleMessage(e));
+            }
+
+            async navigate() {
+                const url = this.urlInput.value.trim();
+                if (!url) return;
+
+                this.showLoading(true);
+
+                try {
+                    const result = await ipcRenderer.invoke('navigate-to-url', url);
+                    
+                    if (result.success) {
+                        if (!result.blocked) {
+                            this.webview.src = url;
+                            this.currentURL = url;
+                            this.updateSecurityIndicator(result.securityInfo);
+                        } else {
+                            this.showNotification('Site Blocked', result.reason, 'error');
+                            this.updateSecurityIndicator({ riskScore: 100, threatType: 'blocked' });
+                        }
+                    } else {
+                        this.showNotification('Navigation Error', result.error, 'error');
+                    }
+                } catch (error) {
+                    this.showNotification('Error', error.message, 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async checkURLSecurity(url) {
+                try {
+                    const result = await ipcRenderer.invoke('check-url-security', url);
+                    this.updateSecurityIndicator(result);
+                    return result;
+                } catch (error) {
+                    console.error('Security check failed:', error);
+                    return { isAllowed: true, riskScore: 0 };
+                }
+            }
+
+            updateSecurityIndicator(securityInfo) {
+                if (!securityInfo) return;
+
+                const indicator = this.securityIndicator;
+                indicator.className = 'security-indicator';
+
+                if (securityInfo.riskScore >= 80) {
+                    indicator.classList.add('danger');
+                    document.getElementById('securityStatus').textContent = 'Danger';
+                } else if (securityInfo.riskScore >= 60) {
+                    indicator.classList.add('warning');
+                    document.getElementById('securityStatus').textContent = 'Warning';
+                } else {
+                    document.getElementById('securityStatus').textContent = 'Protected';
+                }
+            }
+
+            onLoadingStart() {
+                this.isLoading = true;
+                this.showLoading(true);
+                document.getElementById('loadStatus').textContent = 'Loading...';
+                this.updateNavigationButtons();
+            }
+
+            onLoadingStop() {
+                this.isLoading = false;
+                this.showLoading(false);
+                document.getElementById('loadStatus').textContent = 'Ready';
+                this.updateNavigationButtons();
+            }
+
+            onLoadError(event) {
+                this.showLoading(false);
+                this.showNotification('Load Error', `Failed to load: ${event.errorDescription}`, 'error');
+                document.getElementById('loadStatus').textContent = 'Error';
+            }
+
+            onTitleUpdate(title) {
+                document.getElementById('pageTitleText').textContent = title;
+            }
+
+            onNavigate(url) {
+                this.currentURL = url;
+                this.urlInput.value = url;
+                document.getElementById('pageUrl').textContent = url;
+                this.checkURLSecurity(url);
+                this.updateConnectionStatus(url);
+            }
+
+            updateConnectionStatus(url) {
+                const isSecure = url.startsWith('https://');
+                document.getElementById('connectionStatus').textContent = isSecure ? 'Secure Connection' : 'Insecure Connection';
+            }
+
+            updateNavigationButtons() {
+                document.getElementById('backBtn').disabled = !this.webview.canGoBack();
+                document.getElementById('forwardBtn').disabled = !this.webview.canGoForward();
+                document.getElementById('stopBtn').disabled = !this.isLoading;
+                document.getElementById('reloadBtn').disabled = this.isLoading;
+            }
+
+            goBack() {
+                if (this.webview.canGoBack()) {
+                    this.webview.goBack();
+                }
+            }
+
+            goForward() {
+                if (this.webview.canGoForward()) {
+                    this.webview.goForward();
+                }
+            }
+
+            reload() {
+                this.webview.reload();
+            }
+
+            stop() {
+                this.webview.stop();
+            }
+
+            goHome() {
+                this.webview.src = 'https://www.google.com';
+            }
+
+            toggleSecurityPanel() {
+                this.securityPanel.classList.toggle('open');
+                if (this.securityPanel.classList.contains('open')) {
+                    this.loadSecurityData();
+                }
+            }
+
+            closeSecurityPanel() {
+                this.securityPanel.classList.remove('open');
+            }
+
+            toggleFullscreen() {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+
+            handleSidebarNavigation(item) {
+                // Remove active class from all items
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const section = item.dataset.section;
+                this.loadSection(section);
+            }
+
+            async loadSection(section) {
+                this.showLoading(true);
+                
+                try {
+                    switch (section) {
+                        case 'dashboard':
+                            await this.loadSecurityDashboard();
+                            break;
+                        case 'blocked':
+                            await this.loadBlockedSites();
+                            break;
+                        case 'whitelist':
+                            await this.loadWhitelistedSites();
+                            break;
+                        case 'logs':
+                            await this.loadSecurityLogs();
+                            break;
+                        case 'history':
+                            await this.loadBrowsingHistory();
+                            break;
+                        case 'report':
+                            await this.generateSecurityReport();
+                            break;
+                        default:
+                            this.showNotification('Section', `Loading ${section}...`, 'info');
+                    }
+                } catch (error) {
+                    this.showNotification('Error', error.message, 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async loadSecurityData() {
+                try {
+                    const [blockedSites, securityLogs, report] = await Promise.all([
+                        ipcRenderer.invoke('get-blocked-sites'),
+                        ipcRenderer.invoke('get-security-logs'),
+                        ipcRenderer.invoke('generate-security-report')
+                    ]);
+
+                    document.getElementById('threatsBlocked').textContent = blockedSites.length;
+                    document.getElementById('sitesVisited').textContent = report.browsingStats?.total_visits || 0;
+                    document.getElementById('blockedCount').textContent = blockedSites.length;
+
+                    this.loadSecurityEvents(securityLogs.slice(0, 5));
+                } catch (error) {
+                    console.error('Failed to load security data:', error);
+                }
+            }
+
+            loadSecurityEvents(logs) {
+                const container = document.getElementById('securityEvents');
+                container.innerHTML = '';
+
+                logs.forEach(log => {
+                    const item = document.createElement('li');
+                    item.className = 'security-list-item';
+                    
+                    const icon = document.createElement('div');
+                    icon.className = 'security-list-item-icon';
+                    if (log.action.includes('blocked')) {
+                        icon.classList.add('danger');
+                    } else if (log.action.includes('warning')) {
+                        icon.classList.add('warning');
+                    }
+
+                    const text = document.createElement('div');
+                    text.className = 'security-list-item-text';
+                    text.textContent = log.action;
+
+                    const time = document.createElement('div');
+                    time.className = 'security-list-item-time';
+                    time.textContent = new Date(log.timestamp).toLocaleTimeString();
+
+                    item.appendChild(icon);
+                    item.appendChild(text);
+                    item.appendChild(time);
+                    container.appendChild(item);
+                });
+            }
+
+            async loadInitialData() {
+                await this.loadSecurityData();
+                this.updateNavigationButtons();
+            }
+
+            showLoading(show) {
+                const overlay = document.getElementById('loadingOverlay');
+                if (show) {
+                    overlay.classList.add('active');
+                } else {
+                    overlay.classList.remove('active');
+                }
+            }
+
+            showNotification(title, message, type = 'info') {
+                const container = document.getElementById('notificationContainer');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                notification.innerHTML = `
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                `;
+
+                container.appendChild(notification);
+
+                // Trigger animation
+                setTimeout(() => notification.classList.add('show'), 10);
+
+                // Auto remove
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 4000);
+            }
+
+            handleKeyboardShortcuts(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key) {
+                        case 'l':
+                            e.preventDefault();
+                            this.urlInput.focus();
+                            this.urlInput.select();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            this.reload();
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            this.toggleSecurityPanel();
+                            break;
+                    }
+                }
+            }
+
+            startClock() {
+                const updateClock = () => {
+                    const now = new Date();
+                    const time = now.toLocaleTimeString();
+                    document.getElementById('timestamp').textContent = time;
+                };
+
+                updateClock();
+                setInterval(updateClock, 1000);
+            }
+
+            onConsoleMessage(event) {
+                if (event.level === 'error') {
+                    console.error('Webview console error:', event.message);
+                }
+            }
+        }
+
+        // Initialize the browser UI
+        const browserUI = new BrowserUI();
+
+        // Handle IPC events from main process
+        ipcRenderer.on('security-alert', (event, data) => {
+            browserUI.showNotification('Security Alert', data.message, 'warning');
+        });
+
+        ipcRenderer.on('update-security-data', () => {
+            browserUI.loadSecurityData();
+        });
+    </script>
+</body>
+</html>
