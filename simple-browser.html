@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faprot Secure Browser - Professional Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --darker-bg: #020617;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .browser-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .toolbar-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: var(--darker-bg);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .url-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--darker-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            padding: 5px 15px;
+            margin: 0 10px;
+        }
+
+        .url-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        .url-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .security-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success-color);
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-stats {
+            background: var(--darker-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Browser View */
+        .browser-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--darker-bg);
+        }
+
+        .browser-frame {
+            flex: 1;
+            border: none;
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Security Panel */
+        .security-panel {
+            width: 320px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .scan-result {
+            background: var(--darker-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .scan-result.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .scan-result.danger {
+            border-left-color: var(--danger-color);
+        }
+
+        .scan-url {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .scan-status {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .scan-details {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .security-panel {
+                display: none;
+            }
+            
+            .browser-view {
+                margin: 10px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Feature Cards */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card {
+            background: var(--darker-bg);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .feature-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Test Results */
+        .test-results {
+            background: var(--darker-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .test-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+            background: rgba(22, 163, 74, 0.1);
+        }
+
+        .test-item.warning {
+            border-left-color: var(--warning-color);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .test-item.danger {
+            border-left-color: var(--danger-color);
+            background: rgba(220, 38, 38, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-buttons">
+                <button class="toolbar-btn" onclick="goBack()" title="Back">←</button>
+                <button class="toolbar-btn" onclick="goForward()" title="Forward">→</button>
+                <button class="toolbar-btn" onclick="reloadPage()" title="Reload">↻</button>
+                <button class="toolbar-btn" onclick="goHome()" title="Home">🏠</button>
+            </div>
+            
+            <div class="url-bar">
+                <input type="text" class="url-input" id="urlInput" placeholder="Enter URL to test security..." value="https://www.google.com">
+                <div class="security-indicator" id="securityIndicator" title="Secure Connection"></div>
+            </div>
+            
+            <div class="toolbar-buttons">
+                <button class="toolbar-btn" onclick="scanURL()" title="Scan URL">🔍</button>
+                <button class="toolbar-btn" onclick="toggleSecurityPanel()" title="Security Panel">🛡️</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">
+                        <span>🛡️</span>
+                        <span>Security Dashboard</span>
+                    </div>
+                    
+                    <div class="security-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Threats Blocked</span>
+                            <span class="stat-value" id="threatsBlocked">127</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Sites Visited</span>
+                            <span class="stat-value" id="sitesVisited">1,847</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Security Score</span>
+                            <span class="stat-value" id="securityScore">96.2%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Uptime</span>
+                            <span class="stat-value" id="uptime">99.9%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">
+                        <span>⚡</span>
+                        <span>Quick Actions</span>
+                    </div>
+                    
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <div class="feature-title">🔍 URL Scanner</div>
+                            <div class="feature-desc">Test any URL for security threats</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-title">🚫 Block Site</div>
+                            <div class="feature-desc">Block malicious websites</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-title">📊 Security Report</div>
+                            <div class="feature-desc">View detailed security analysis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <button class="btn" onclick="runSecurityTest()">🧪 Run Security Test</button>
+                    <button class="btn" onclick="clearHistory()" style="margin-top: 10px; background: var(--danger-color);">🗑️ Clear History</button>
+                </div>
+            </div>
+
+            <!-- Browser View -->
+            <div class="browser-view">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div>Scanning URL for security threats...</div>
+                </div>
+                
+                <iframe class="browser-frame" id="browserFrame" src="https://www.google.com"></iframe>
+                
+                <div class="test-results" id="testResults" style="display: none;">
+                    <h3 style="margin-bottom: 15px; color: var(--text-primary);">🧪 Security Test Results</h3>
+                    <div id="testResultsContent"></div>
+                </div>
+            </div>
+
+            <!-- Security Panel -->
+            <div class="security-panel" id="securityPanel">
+                <div class="sidebar-title">
+                    <span>🔍</span>
+                    <span>Recent Scans</span>
+                </div>
+                
+                <div id="scanResults">
+                    <div class="scan-result">
+                        <div class="scan-url">https://www.google.com</div>
+                        <div class="scan-status" style="color: var(--success-color);">✅ Safe</div>
+                        <div class="scan-details">No threats detected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <div class="status-item">
+                    <span>🛡️</span>
+                    <span>Faprot Secure Browser</span>
+                </div>
+                <div class="status-item">
+                    <span>🔒</span>
+                    <span id="connectionStatus">Secure Connection</span>
+                </div>
+            </div>
+            <div class="status-right">
+                <div class="status-item">
+                    <span>📊</span>
+                    <span id="performanceStatus">Performance: Excellent</span>
+                </div>
+                <div class="status-item">
+                    <span>🕒</span>
+                    <span id="currentTime"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Browser functionality
+        let currentUrl = 'https://www.google.com';
+        let scanHistory = [];
+        let securityStats = {
+            threatsBlocked: 127,
+            sitesVisited: 1847,
+            securityScore: 96.2,
+            uptime: 99.9
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            updateSecurityStats();
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString();
+        }
+
+        function updateSecurityStats() {
+            document.getElementById('threatsBlocked').textContent = securityStats.threatsBlocked;
+            document.getElementById('sitesVisited').textContent = securityStats.sitesVisited.toLocaleString();
+            document.getElementById('securityScore').textContent = securityStats.securityScore + '%';
+            document.getElementById('uptime').textContent = securityStats.uptime + '%';
+        }
+
+        function goBack() {
+            const frame = document.getElementById('browserFrame');
+            if (frame.contentWindow) {
+                frame.contentWindow.history.back();
+            }
+        }
+
+        function goForward() {
+            const frame = document.getElementById('browserFrame');
+            if (frame.contentWindow) {
+                frame.contentWindow.history.forward();
+            }
+        }
+
+        function reloadPage() {
+            const frame = document.getElementById('browserFrame');
+            frame.src = frame.src;
+        }
+
+        function goHome() {
+            const frame = document.getElementById('browserFrame');
+            frame.src = 'https://www.google.com';
+            document.getElementById('urlInput').value = 'https://www.google.com';
+            updateSecurityIndicator('safe');
+        }
+
+        function scanURL() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL to scan');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('browserFrame').style.display = 'none';
+            document.getElementById('testResults').style.display = 'none';
+
+            // Simulate security scanning
+            setTimeout(() => {
+                const result = performSecurityScan(url);
+                displayScanResult(result);
+                
+                // Update browser frame
+                if (result.status !== 'danger') {
+                    document.getElementById('browserFrame').src = url;
+                }
+                
+                // Hide loading
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('browserFrame').style.display = 'block';
+                
+                // Update stats
+                securityStats.sitesVisited++;
+                if (result.status === 'danger') {
+                    securityStats.threatsBlocked++;
+                }
+                updateSecurityStats();
+            }, 2000);
+        }
+
+        function performSecurityScan(url) {
+            // Normalize URL
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            const threats = [];
+            let riskScore = 0;
+            let status = 'safe';
+
+            // Check suspicious patterns
+            const suspiciousPatterns = ['login', 'secure', 'verify', 'update', 'account', 'password'];
+            const urlLower = url.toLowerCase();
+            
+            for (const pattern of suspiciousPatterns) {
+                if (urlLower.includes(pattern) && !isTrustedDomain(url)) {
+                    threats.push(`Suspicious pattern: ${pattern}`);
+                    riskScore += 20;
+                }
+            }
+
+            // Check HTTPS
+            if (!url.startsWith('https://')) {
+                threats.push('Non-HTTPS connection');
+                riskScore += 30;
+            }
+
+            // Check domain length
+            try {
+                const domain = new URL(url).hostname;
+                if (domain.length > 30) {
+                    threats.push('Suspicious domain length');
+                    riskScore += 25;
+                }
+            } catch (e) {
+                threats.push('Invalid URL format');
+                riskScore += 100;
+            }
+
+            // Determine status
+            if (riskScore >= 80) {
+                status = 'danger';
+            } else if (riskScore >= 50) {
+                status = 'warning';
+            }
+
+            return {
+                url: url,
+                status: status,
+                riskScore: riskScore,
+                threats: threats,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        function isTrustedDomain(url) {
+            const trustedDomains = [
+                'google.com', 'microsoft.com', 'apple.com', 'github.com',
+                'stackoverflow.com', 'wikipedia.org', 'reddit.com',
+                'youtube.com', 'facebook.com', 'twitter.com', 'linkedin.com'
+            ];
+            
+            try {
+                const domain = new URL(url).hostname;
+                return trustedDomains.some(trusted => domain.includes(trusted));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function displayScanResult(result) {
+            const scanResults = document.getElementById('scanResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `scan-result ${result.status}`;
+            
+            let statusIcon = '✅';
+            let statusText = 'Safe';
+            
+            if (result.status === 'warning') {
+                statusIcon = '⚠️';
+                statusText = 'Warning';
+            } else if (result.status === 'danger') {
+                statusIcon = '🚨';
+                statusText = 'Danger';
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="scan-url">${result.url}</div>
+                <div class="scan-status" style="color: ${result.status === 'safe' ? 'var(--success-color)' : result.status === 'warning' ? 'var(--warning-color)' : 'var(--danger-color)'};">
+                    ${statusIcon} ${statusText}
+                </div>
+                <div class="scan-details">
+                    Risk Score: ${result.riskScore}/100
+                    ${result.threats.length > 0 ? '<br>Threats: ' + result.threats.join(', ') : '<br>No threats detected'}
+                </div>
+            `;
+            
+            scanResults.insertBefore(resultDiv, scanResults.firstChild);
+            
+            // Keep only last 5 results
+            while (scanResults.children.length > 5) {
+                scanResults.removeChild(scanResults.lastChild);
+            }
+            
+            // Update security indicator
+            updateSecurityIndicator(result.status);
+        }
+
+        function updateSecurityIndicator(status) {
+            const indicator = document.getElementById('securityIndicator');
+            const connectionStatus = document.getElementById('connectionStatus');
+            
+            if (status === 'safe') {
+                indicator.style.background = 'var(--success-color)';
+                connectionStatus.textContent = 'Secure Connection';
+            } else if (status === 'warning') {
+                indicator.style.background = 'var(--warning-color)';
+                connectionStatus.textContent = 'Warning - Check Security';
+            } else if (status === 'danger') {
+                indicator.style.background = 'var(--danger-color)';
+                connectionStatus.textContent = 'Danger - Threat Detected';
+            }
+        }
+
+        function toggleSecurityPanel() {
+            const panel = document.getElementById('securityPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function runSecurityTest() {
+            const testUrls = [
+                'https://www.google.com',
+                'https://suspicious-login.example.com',
+                'https://phishing-scam.fake',
+                'https://www.github.com'
+            ];
+            
+            document.getElementById('testResults').style.display = 'block';
+            document.getElementById('browserFrame').style.display = 'none';
+            document.getElementById('testResultsContent').innerHTML = '';
+            
+            testUrls.forEach((url, index) => {
+                setTimeout(() => {
+                    const result = performSecurityScan(url);
+                    addTestResult(result);
+                }, index * 1000);
+            });
+        }
+
+        function addTestResult(result) {
+            const testResultsContent = document.getElementById('testResultsContent');
+            const testItem = document.createElement('div');
+            testItem.className = `test-item ${result.status}`;
+            
+            let statusIcon = '✅';
+            if (result.status === 'warning') statusIcon = '⚠️';
+            if (result.status === 'danger') statusIcon = '🚨';
+            
+            testItem.innerHTML = `
+                <strong>${statusIcon} ${result.url}</strong><br>
+                Status: ${result.status.toUpperCase()}<br>
+                Risk Score: ${result.riskScore}/100<br>
+                ${result.threats.length > 0 ? 'Threats: ' + result.threats.join(', ') : 'No threats detected'}
+            `;
+            
+            testResultsContent.appendChild(testItem);
+        }
+
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all browsing history and scan results?')) {
+                document.getElementById('scanResults').innerHTML = '';
+                document.getElementById('testResults').style.display = 'none';
+                document.getElementById('browserFrame').style.display = 'block';
+                
+                // Reset stats
+                securityStats = {
+                    threatsBlocked: 0,
+                    sitesVisited: 0,
+                    securityScore: 100,
+                    uptime: 100
+                };
+                updateSecurityStats();
+            }
+        }
+
+        // Handle Enter key in URL input
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scanURL();
+            }
+        });
+
+        // Auto-scan on URL change
+        document.getElementById('urlInput').addEventListener('change', function() {
+            scanURL();
+        });
+    </script>
+</body>
+</html>
