@@ -1,0 +1,73 @@
+# Render Configuration for Faprot Secure Browser
+# This file tells Render how to build and deploy your application
+
+services:
+  # Web Service Configuration
+  - type: web
+    name: faprot-secure-browser
+    env: node
+    plan: free
+    region: oregon
+    
+    # Build Configuration
+    buildCommand: npm install --production
+    startCommand: npm start
+    
+    # Environment Variables
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        value: localhost
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: faprot_browser
+      - key: DB_USER
+        value: postgres
+      - key: DB_PASSWORD
+        value: password
+      - key: SECURITY_LEVEL
+        value: high
+      - key: AUTO_BLOCK_SUSPICIOUS
+        value: true
+      - key: HTTPS_ONLY
+        value: true
+      - key: BLOCK_TRACKERS
+        value: true
+      - key: AI_THREAT_DETECTION
+        value: true
+      - key: AI_LEARNING_ENABLED
+        value: true
+    
+    # Health Check
+    healthCheckPath: /
+    
+    # Auto-Deploy Settings
+    autoDeploy: true
+    
+    # Build Context
+    buildContext: .
+    
+    # Static Files
+    staticPublishDir: .
+    
+    # Headers
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-XSS-Protection
+        value: "1; mode=block"
+      - path: /*
+        name: Strict-Transport-Security
+        value: "max-age=31536000; includeSubDomains"
+
+# Version: 1
+# Documentation: https://render.com/docs/yaml-spec

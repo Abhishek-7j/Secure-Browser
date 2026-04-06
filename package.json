@@ -23,8 +23,9 @@
     "malware-protection"
   ],
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
+    "start": "node web-server.js",
+    "browser": "electron browser-main.js",
+    "dev": "electron browser-main.js --dev",
     "build": "electron-builder",
     "build-win": "electron-builder --win",
     "build-mac": "electron-builder --mac",
@@ -47,7 +48,9 @@
     "devtools": "electron . --devtools",
     "debug": "electron . --debug",
     "profile": "electron . --profile",
-    "benchmark": "node scripts/benchmark.js"
+    "benchmark": "node scripts/benchmark.js",
+    "web": "node web-server.js",
+    "web:dev": "nodemon web-server.js"
   },
   "dependencies": {
     "electron": "^27.0.0",
